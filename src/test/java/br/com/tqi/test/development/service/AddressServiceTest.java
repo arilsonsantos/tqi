@@ -39,6 +39,7 @@ public class AddressServiceTest {
     }
 
     @Test
+    @DisplayName("Get a valid address by Id")
     public void getAddressById() {
         Long id = 1L;
         ModelMapper modelMapper = new ModelMapper();
@@ -55,7 +56,7 @@ public class AddressServiceTest {
     }
 
     @Test
-    @DisplayName("Throw ResourceNotFoundException when id doens't exist")
+    @DisplayName("Throws ResourceNotFoundException when id doens't exist")
     public void throwResourceNotFound() {
         Long id = 1L;
 
