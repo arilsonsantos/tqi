@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import br.com.tqi.test.development.dto.AddressDto;
@@ -22,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * AddressRepository
  */
+@ActiveProfiles("dev")
 @ExtendWith(SpringExtension.class)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 @DataJpaTest
@@ -39,7 +41,7 @@ public class AddressRepositoryTest {
 
         Client client = modelMapper.map(clientDto, Client.class);
 
-        AddressDto addressDto = AddressDto.builder().cep("00000-111").endereco("Rua Abbey Road").cidade("Certãozinho")
+        AddressDto addressDto = AddressDto.builder().cep("00000111").endereco("Rua Abbey Road").cidade("Certãozinho")
                 .estado("SP").pais("Brasil").build();
 
         Address address = modelMapper.map(addressDto, Address.class);

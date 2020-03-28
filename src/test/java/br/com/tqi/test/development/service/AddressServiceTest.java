@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,6 +24,7 @@ import br.com.tqi.test.development.repository.AddressRepository;
 /**
  * AddressServiceTest
  */
+@ActiveProfiles("dev")
 @ExtendWith(SpringExtension.class)
 public class AddressServiceTest {
 
@@ -64,6 +66,7 @@ public class AddressServiceTest {
                 .thenThrow(new ResourceNotFoundException("Endereço não encontrado"));
 
         Throwable ex = Assertions.catchThrowable(() -> addressService.getById(id));
+
         Assertions.assertThat(ex).isInstanceOf(ResourceNotFoundException.class);
         Mockito.verify(addressRepository, Mockito.times(1)).findById(id);
     }
