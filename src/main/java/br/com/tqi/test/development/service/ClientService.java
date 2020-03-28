@@ -3,13 +3,11 @@ package br.com.tqi.test.development.service;
 import static br.com.tqi.test.development.enumerates.ErrorMessageEnum.CLIENTE_NAO_ENCONTRADO;
 import static br.com.tqi.test.development.enumerates.ErrorMessageEnum.CPF_JA_CADASTRADO;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-public class ClientService implements IClientService{
+public class ClientService implements IClientService {
 
     private final ClientRepository clientRepository;
     private final AddressRepository addressRepository;
@@ -46,14 +44,10 @@ public class ClientService implements IClientService{
 
     public List<ClientDto> findAll() {
         ModelMapper mapper = new ModelMapper();
-        List<ClientDto> clients = new ArrayList<>();
 
         List<Client> listClient = clientRepository.findAll();
-
-        Type listType = new TypeToken<List<ClientDto>>() {
-        }.getType();
-
-        clients = mapper.map(listClient, listType);
+        List<ClientDto> clients = listClient.stream().map(s -> mapper.map(s, ClientDto.class))
+                .collect(Collectors.toList());
 
         return clients;
     }
