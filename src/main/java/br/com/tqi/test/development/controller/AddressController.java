@@ -1,7 +1,6 @@
 package br.com.tqi.test.development.controller;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +18,7 @@ import lombok.RequiredArgsConstructor;
  */
 @RestController
 @RequestMapping("address")
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class AddressController {
 
     private final IAddressService addressService;
