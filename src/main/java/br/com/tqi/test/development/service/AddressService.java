@@ -7,7 +7,6 @@ import static br.com.tqi.test.development.enumerates.ErrorMessageEnum.ENDERECO_N
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -27,8 +26,7 @@ import lombok.RequiredArgsConstructor;
  * AddressService
  */
 @Service
-@AllArgsConstructor
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class AddressService implements IAddressService {
     private static final String PAIS = "Brasil";
     private final RestTemplate restTemplate;

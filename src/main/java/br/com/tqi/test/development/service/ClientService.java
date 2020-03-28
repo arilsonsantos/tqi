@@ -8,7 +8,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.tqi.test.development.dto.ClientDto;
@@ -21,7 +20,7 @@ import br.com.tqi.test.development.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class ClientService implements IClientService {
 
     private final ClientRepository clientRepository;
