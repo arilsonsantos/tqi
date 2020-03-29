@@ -14,7 +14,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.web.client.RestTemplate;
 
 import br.com.tqi.test.development.dto.AddressDto;
 import br.com.tqi.test.development.entity.Address;
@@ -30,14 +29,14 @@ public class AddressServiceTest {
 
     IAddressService addressService;
     IClientService clientService;
-    RestTemplate restTemplate;
+    IViaCepClient viaCepService;
 
     @MockBean
     AddressRepository addressRepository;
 
     @BeforeEach
     public void setUp() {
-        this.addressService = new AddressService(restTemplate, clientService, addressRepository);
+        this.addressService = new AddressService(viaCepService, clientService, addressRepository);
     }
 
     @Test

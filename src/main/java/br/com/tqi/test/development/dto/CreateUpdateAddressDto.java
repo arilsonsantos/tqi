@@ -5,6 +5,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import br.com.tqi.test.development.validators.annotations.CEP;
 import lombok.AllArgsConstructor;
@@ -33,9 +34,11 @@ public class CreateUpdateAddressDto {
     private String bairro;
 
     @NotEmpty
+    @JsonProperty("localidade")
     private String cidade;
 
     @NotNull
+    @JsonProperty("uf")
     private String estado;
 
     private String pais;
