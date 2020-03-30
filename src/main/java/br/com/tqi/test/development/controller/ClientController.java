@@ -1,10 +1,9 @@
 package br.com.tqi.test.development.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.tqi.test.development.dto.ClientDto;
@@ -33,11 +33,19 @@ public class ClientController {
     private final AddressService addressService;
     private final ModelMapper mapper;
 
-    @ApiOperation(value = "Find all clients")
+    @ApiOperation(value = "Find all clients with pageable")
     @GetMapping(value = "/client")
-    public ResponseEntity<List<ClientDto>> getAllClient() {
-        List<ClientDto> list = clientService.findAll();
-        return list.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(list);
+    public ResponseEntity<Page<ClientDto>> findAll(
+        @RequestParam(defaultValue = "0") Integer pageNumber, 
+        @RequestParam(defaultValue = "10") Integer pageSize, 
+        @RequestParam(defaultValue = "nome") String sortBy){
+
+        pageNumber = pageNumber == 1 || pageNumber == 0 ? 0 : Math.abs(pageNumber) - 1;    
+        Page<Client> pageClient = clientService.findAll(pageNumber, pageSize, sortBy);
+
+        Page<ClientDto> resultDto = pageClient.map(s -> mapper.map(s, ClientDto.class));
+
+        return resultDto.getContent().isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(resultDto);
     }
 
     @ApiOperation(value = "Find one client")

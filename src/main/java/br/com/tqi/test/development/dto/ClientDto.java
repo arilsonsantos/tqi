@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.com.tqi.test.development.validators.annotations.CPF;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class ClientDto  {
 
     private Long id;
 
+    @CPF(message = "cpf inválido")
     private String cpf;
 
     private String nome;

@@ -1,0 +1,13 @@
+@host = http://localhost:8080/test-tqi/client
+
+### Find one client
+
+{{host}}/1
+
+### Find all clients order by name by default
+
+{{host}}
+
+### Find all clients from page 1  order by id
+
+{{host}}?pageNumber=3&pageSize=2&sortBy=nome

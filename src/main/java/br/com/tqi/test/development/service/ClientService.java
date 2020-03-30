@@ -3,14 +3,14 @@ package br.com.tqi.test.development.service;
 import static br.com.tqi.test.development.enumerates.ErrorMessageEnum.CLIENTE_NAO_ENCONTRADO;
 import static br.com.tqi.test.development.enumerates.ErrorMessageEnum.CPF_JA_CADASTRADO;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import br.com.tqi.test.development.dto.ClientDto;
 import br.com.tqi.test.development.entity.Address;
 import br.com.tqi.test.development.entity.Client;
 import br.com.tqi.test.development.exceptions.ResourceAlreadyExistsException;
@@ -41,15 +41,6 @@ public class ClientService implements IClientService {
         return newClient;
     }
 
-    public List<ClientDto> findAll() {
-        ModelMapper mapper = new ModelMapper();
-
-        List<Client> listClient = clientRepository.findAll();
-        List<ClientDto> clients = listClient.stream().map(s -> mapper.map(s, ClientDto.class))
-                .collect(Collectors.toList());
-
-        return clients;
-    }
 
     public void existsByCpf(String cpf) {
         boolean exists = clientRepository.existsByCpf(cpf);
@@ -63,4 +54,10 @@ public class ClientService implements IClientService {
         return client.orElseThrow(() -> new ResourceNotFoundException(CLIENTE_NAO_ENCONTRADO.getMessage()));
     }
 
+    @Override
+    public Page<Client> findAll(Integer pageNumber, Integer pageSize, String sortBy) {
+        Pageable paging = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+        return clientRepository.findAll(paging);
+    }
+   
 }

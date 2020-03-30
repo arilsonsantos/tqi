@@ -8,7 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import br.com.tqi.test.development.validators.annotations.CEP;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -44,7 +43,6 @@ public class Address {
 
     private String pais;
 
-    @CEP
     private String cep;
 
     @OneToOne

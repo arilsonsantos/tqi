@@ -24,7 +24,17 @@ public class ViaCepClientServiceTest {
         ViaCepClientAddressDto addressDto = testRestTemplate
                 .getForEntity("http://viacep.com.br/ws/01001000/json", ViaCepClientAddressDto.class).getBody();
 
-        Assertions.assertThat(addressDto).isNotNull();
+        Assertions.assertThat(addressDto.cep).isNotNull();
+    }
+
+    @Test
+    @DisplayName("Find a that doesn't exist -> [viacep.com.br/ws]")
+    public void findACepDoesntExsist() {
+        TestRestTemplate testRestTemplate = new TestRestTemplate();
+        ViaCepClientAddressDto addressDto = testRestTemplate
+                .getForEntity("http://viacep.com.br/ws/11111111/json", ViaCepClientAddressDto.class).getBody();
+
+        Assertions.assertThat(addressDto.getCep()).isNull();
     }
 
 }

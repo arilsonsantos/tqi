@@ -35,65 +35,61 @@ import lombok.RequiredArgsConstructor;
 @WebMvcTest(controllers = AddressController.class)
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class AddressControllerTest {
-        static final String ADDRESS_API = "/address";
+    static final String ADDRESS_API = "/address";
 
-        final MockMvc mvc;
-        final ModelMapper mapper;
+    final MockMvc mvc;
+    final ModelMapper mapper;
 
-        @MockBean
-        IAddressService service;
+    @MockBean
+    IAddressService service;
 
-        @Test
-        @DisplayName("Find a CEP")
-        public void findAValidCEP() throws Exception {
-                final String cep = "05372020";
-                Address address = Address.builder().id(1L).endereco("Rua X").complemento("Comp X").bairro("Centro")
-                                .cidade("São Paulo").estado("SP").cep(cep).pais("Brasil").build();
+    @Test
+    @DisplayName("Find a CEP")
+    public void findAValidCEP() throws Exception {
+        final String cep = "05372020";
+        Address address = Address.builder().id(1L).endereco("Rua X").complemento("Comp X").bairro("Centro")
+                .cidade("São Paulo").estado("SP").cep(cep).pais("Brasil").build();
 
-                BDDMockito.given(service.getByCep(cep)).willReturn(address);
+        BDDMockito.given(service.getByCep(cep)).willReturn(address);
 
-                AddressDto addressDto = mapper.map(address, AddressDto.class);
+        AddressDto addressDto = mapper.map(address, AddressDto.class);
 
-                String json = new ObjectMapper().writeValueAsString(addressDto);
+        String json = new ObjectMapper().writeValueAsString(addressDto);
 
-                MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ADDRESS_API + "/" + cep)
-                                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
-                                .content(json);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ADDRESS_API + "/" + cep)
+                .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON).content(json);
 
-                mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
-                                .andExpect(MockMvcResultMatchers.jsonPath("cep").value(addressDto.getCep()));
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("cep").value(addressDto.getCep()));
 
-        }
+    }
 
-        @Test
-        @DisplayName("Throws ResourceNotFoundException - CEP that not exist")
-        public void findACEPNotExist() throws Exception {
+    @Test
+    @DisplayName("Throws ResourceNotFoundException - CEP that not exist")
+    public void findACEPNotExist() throws Exception {
+        final String cep = "11111111";
 
-                final String cep = "11111111";
+        BDDMockito.given(service.getByCep(cep))
+                .willThrow(new ResourceNotFoundException("O CEP náo foi encontrado: " + cep));
 
-                BDDMockito.given(service.getByCep(cep))
-                                .willThrow(new ResourceNotFoundException("O CEP náo foi encontrado: " + cep));
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ADDRESS_API.concat("/" + cep));
 
-                MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ADDRESS_API.concat("/" + cep));
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string("O CEP náo foi encontrado: " + cep));
+    }
 
-                mvc.perform(request).andExpect(MockMvcResultMatchers.status().isNotFound())
-                                .andExpect(MockMvcResultMatchers.content().string("O CEP náo foi encontrado: " + cep));
-        }
+    @Test
+    @DisplayName("Throws CepInvalidFormatException - CEP with invalid format")
+    public void findAInvalidFormatedCEP() throws Exception {
+        final String cep = "1111111";
 
-        @Test
-        @DisplayName("Throws CepInvalidFormatException - CEP with invalid format")
-        public void findAInvalidFormatedCEP() throws Exception {
+        BDDMockito.given(service.getByCep(cep)).willThrow(
+                new CepInvalidFormatException("O CEP deve ter um dos seguintes formatos: 99999-999 ou 99999999"));
 
-                final String cep = "1111111";
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ADDRESS_API.concat("/" + cep));
 
-                BDDMockito.given(service.getByCep(cep)).willThrow(new CepInvalidFormatException(
-                                "O CEP deve ter um dos seguintes formatos: 99999-999 ou 99999999"));
-
-                MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ADDRESS_API.concat("/" + cep));
-
-                mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest())
-                                .andExpect(MockMvcResultMatchers.content().string(
-                                                "O CEP deve ter um dos seguintes formatos: 99999-999 ou 99999999"));
-        }
+        mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers
+                .content().string("O CEP deve ter um dos seguintes formatos: 99999-999 ou 99999999"));
+    }
 
 }
