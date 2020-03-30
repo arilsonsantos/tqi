@@ -18,7 +18,9 @@ import br.com.tqi.test.development.exceptions.ResourceNotFoundException;
 import br.com.tqi.test.development.repository.AddressRepository;
 import br.com.tqi.test.development.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ClientService implements IClientService {
@@ -29,16 +31,19 @@ public class ClientService implements IClientService {
     public Client save(Client clientEntity) {
         Address addressEntity = clientEntity.getAddress();
 
-        Client newClient = clientRepository.save(clientEntity);
+        Client client = clientRepository.save(clientEntity);
 
         if (addressEntity.getId() == null) {
-            addressEntity.setClient(newClient);
+            addressEntity.setClient(client);
             addressRepository.save(addressEntity);
+
+            log.info("Novo endereço adicionado {}", addressEntity.getId());
         }
 
-        newClient.setAddress(addressEntity);
-
-        return newClient;
+        client.setAddress(addressEntity);
+        log.info("Novo cliente adicionado {}", client.getId());
+        
+        return client;
     }
 
 

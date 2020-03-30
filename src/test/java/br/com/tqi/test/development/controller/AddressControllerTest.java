@@ -84,12 +84,12 @@ public class AddressControllerTest {
         final String cep = "1111111";
 
         BDDMockito.given(service.getByCep(cep)).willThrow(
-                new CepInvalidFormatException("O CEP deve ter um dos seguintes formatos: 99999-999 ou 99999999"));
+                new CepInvalidFormatException("O CEP deve conter 8 números"));
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(ADDRESS_API.concat("/" + cep));
 
         mvc.perform(request).andExpect(MockMvcResultMatchers.status().isBadRequest()).andExpect(MockMvcResultMatchers
-                .content().string("O CEP deve ter um dos seguintes formatos: 99999-999 ou 99999999"));
+                .content().string("O CEP deve conter 8 números"));
     }
 
 }

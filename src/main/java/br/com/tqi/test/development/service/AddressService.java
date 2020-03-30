@@ -13,10 +13,12 @@ import br.com.tqi.test.development.exceptions.ResourceAlreadyExistsException;
 import br.com.tqi.test.development.exceptions.ResourceNotFoundException;
 import br.com.tqi.test.development.repository.AddressRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * AddressService
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AddressService implements IAddressService {
@@ -30,18 +32,22 @@ public class AddressService implements IAddressService {
     }
 
     public void updateByClientAndAddress(Long idClient, Long idAddress, Address addressEntity) {
-        Client clientEntity = clientService.getById(idClient);
+        Client client = clientService.getById(idClient);
         Address actualAddress = getById(idAddress);
 
-        if (!actualAddress.getClient().equals(clientEntity)) {
+        if (!actualAddress.getClient().equals(client)) {
+            log.error("O endereço {} pertence ao cliente {}", idAddress, actualAddress.getClient());
+
             throw new ResourceAlreadyExistsException(ENDERECO_DE_OUTRO_CLIENTE.getMessage());
         }
 
         addressEntity.setId(actualAddress.getId());
-        addressEntity.setClient(clientEntity);
-        clientEntity.setAddress(addressEntity);
+        addressEntity.setClient(client);
+        client.setAddress(addressEntity);
 
         addressRepository.save(addressEntity);
+
+        log.info("Endereço autializado para o cliente {}", client.getId());
     }
 
     public Address getById(Long id) {
