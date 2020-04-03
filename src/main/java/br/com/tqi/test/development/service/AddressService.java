@@ -5,6 +5,7 @@ import static br.com.tqi.test.development.enumerates.ErrorMessageEnum.ENDERECO_N
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.tqi.test.development.entity.Address;
@@ -20,15 +21,14 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Autowired)
 public class AddressService implements IAddressService {
-
-    private final IViaCepClient viaCepClient;
     private final IClientService clientService;
+    private final ICepService cepService;
     private final AddressRepository addressRepository;
-
+   
     public Address getByCep(String cep) {
-        return viaCepClient.getAddressByCep(cep);
+        return cepService.getAddressByCep(cep);
     }
 
     public void updateByClientAndAddress(Long idClient, Long idAddress, Address addressEntity) {

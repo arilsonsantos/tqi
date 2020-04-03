@@ -3,47 +3,37 @@ package br.com.tqi.test.development.service;
 import static br.com.tqi.test.development.enumerates.ErrorMessageEnum.CEP_FORMATO_INVALIDO;
 import static br.com.tqi.test.development.enumerates.ErrorMessageEnum.CEP_NAO_ENCONTRADO;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import br.com.tqi.test.development.dto.ViaCepClientAddressDto;
 import br.com.tqi.test.development.entity.Address;
 import br.com.tqi.test.development.exceptions.CepInvalidFormatException;
 import br.com.tqi.test.development.exceptions.ResourceNotFoundException;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * ViaCepClientSerivce
  */
 @Service
-@RequiredArgsConstructor
-public class ViaCepClientSerivce implements IViaCepClient {
-    private static final String PAIS = "Brasil";
-    private final RestTemplate restTemplate;
-
-    @Value("${uri.cep}")
-    private String URI;
-
-    @Value("${uri.cep.type.return}")
-    private String URI_RETURN_TYPE;
+@AllArgsConstructor
+public class CepService implements ICepService {
+    private  IViaCepClientService viaCepClient;
 
     @Override
     public Address getAddressByCep(String cep) {
         isValidFormat(cep);
-        ViaCepClientAddressDto reAddress = restTemplate.getForEntity(URI + cep + URI_RETURN_TYPE, ViaCepClientAddressDto.class)
-                .getBody();
+        ViaCepClientAddressDto reAddress = viaCepClient.getCep(cep);
         isCepFound(cep, reAddress);
 
-        Address addressEntity = new Address();
-        addressEntity.setCep(reAddress.getCep());
-        addressEntity.setEndereco(reAddress.getLogradouro());
-        addressEntity.setBairro(reAddress.getBairro());
-        addressEntity.setCidade(reAddress.getLocalidade());
-        addressEntity.setEstado(reAddress.getUf());
-        addressEntity.setPais(PAIS);
+        Address address = new Address();
+        address.setCep(reAddress.getCep());
+        address.setEndereco(reAddress.getLogradouro());
+        address.setBairro(reAddress.getBairro());
+        address.setCidade(reAddress.getLocalidade());
+        address.setEstado(reAddress.getUf());
+        address.setPais("Brasil");
 
-        return addressEntity;
+        return address;
     }
 
     private void isValidFormat(String cep) {
