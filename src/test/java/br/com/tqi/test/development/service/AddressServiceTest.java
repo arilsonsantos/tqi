@@ -27,16 +27,17 @@ import br.com.tqi.test.development.repository.AddressRepository;
 @ExtendWith(SpringExtension.class)
 public class AddressServiceTest {
 
-    IAddressService addressService;
     IClientService clientService;
-    IViaCepClient viaCepService;
+    ICepService cepService;
+    IAddressService addressService;
+
 
     @MockBean
     AddressRepository addressRepository;
 
     @BeforeEach
     public void setUp() {
-        this.addressService = new AddressService(viaCepService, clientService, addressRepository);
+        this.addressService = new AddressService(clientService, cepService, addressRepository);
     }
 
     @Test

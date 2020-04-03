@@ -11,18 +11,19 @@ import br.com.tqi.test.development.dto.AddressDto;
 import br.com.tqi.test.development.entity.Address;
 import br.com.tqi.test.development.service.IAddressService;
 import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 
 /**
  * AddressController
  */
 @RestController
 @RequestMapping("address")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class AddressController {
 
-    private final IAddressService addressService;
-    private final ModelMapper mapper;
+    private  IAddressService addressService;
+    private  ModelMapper mapper;
+
 
     @ApiOperation(value = "Get address by cep")
     @GetMapping(value = "/{cep}")

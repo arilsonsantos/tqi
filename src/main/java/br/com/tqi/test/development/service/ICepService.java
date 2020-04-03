@@ -5,7 +5,7 @@ import br.com.tqi.test.development.entity.Address;
 /**
  * IViaCepClient
  */
-public interface IViaCepClient {
+public interface ICepService {
 
     Address getAddressByCep(String cep);
 

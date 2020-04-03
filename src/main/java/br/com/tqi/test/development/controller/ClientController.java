@@ -75,7 +75,7 @@ public class ClientController {
     public ResponseEntity<Void> changeClientAddress(
         @PathVariable("idClient") Long idClient, 
         @PathVariable("idAddress") Long idAddress, 
-        @RequestBody CreateUpdateAddressDto addressDto) {
+        @Valid @RequestBody CreateUpdateAddressDto addressDto) {
 
         Address address = mapper.map(addressDto, Address.class);
 
